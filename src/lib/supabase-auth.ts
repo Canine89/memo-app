@@ -51,22 +51,45 @@ export async function signOut() {
 }
 
 export async function getCurrentUser(): Promise<User | null> {
-  const { data: { user }, error } = await supabase.auth.getUser()
-  
-  if (error || !user) {
-    return null
-  }
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    
+    if (error || !user) {
+      return null
+    }
 
-  return {
-    id: user.id,
-    email: user.email!,
-    name: user.user_metadata?.name || null,
+    return {
+      id: user.id,
+      email: user.email!,
+      name: user.user_metadata?.name || null,
+    }
+  } catch (error) {
+    console.error('사용자 조회 오류:', error)
+    return null
   }
 }
 
 export async function getCurrentUserFromServer(): Promise<User | null> {
   try {
-    const { data: { user }, error } = await supabase.auth.getUser()
+    // 서버에서는 쿠키에서 세션을 읽어야 함
+    const { createServerClient } = await import('@supabase/ssr')
+    const { cookies } = await import('next/headers')
+    
+    const cookieStore = await cookies()
+    
+    const supabaseServer = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value
+          },
+        },
+      }
+    )
+    
+    const { data: { user }, error } = await supabaseServer.auth.getUser()
     
     if (error || !user) {
       return null

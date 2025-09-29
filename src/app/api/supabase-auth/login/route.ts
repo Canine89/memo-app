@@ -4,6 +4,7 @@ import { signIn } from '@/lib/supabase-auth'
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json()
+    console.log('로그인 시도:', { email })
 
     if (!email || !password) {
       return NextResponse.json(
@@ -13,6 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await signIn(email, password)
+    console.log('로그인 성공:', { userId: data.user?.id, email: data.user?.email })
 
     return NextResponse.json(
       { 
