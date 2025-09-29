@@ -3,10 +3,11 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const userId = request.cookies.get('user-id')?.value
+    const { id } = await params
 
     if (!userId) {
       return NextResponse.json(
@@ -17,7 +18,7 @@ export async function GET(
 
     const memo = await prisma.memo.findFirst({
       where: {
-        id: params.id,
+        id,
         userId,
       },
     })
@@ -41,10 +42,11 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const userId = request.cookies.get('user-id')?.value
+    const { id } = await params
 
     if (!userId) {
       return NextResponse.json(
@@ -64,7 +66,7 @@ export async function PUT(
 
     const memo = await prisma.memo.updateMany({
       where: {
-        id: params.id,
+        id,
         userId,
       },
       data: {
@@ -81,7 +83,7 @@ export async function PUT(
     }
 
     const updatedMemo = await prisma.memo.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json(updatedMemo)
@@ -96,10 +98,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const userId = request.cookies.get('user-id')?.value
+    const { id } = await params
 
     if (!userId) {
       return NextResponse.json(
@@ -110,7 +113,7 @@ export async function DELETE(
 
     const memo = await prisma.memo.deleteMany({
       where: {
-        id: params.id,
+        id,
         userId,
       },
     })

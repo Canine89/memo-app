@@ -3,7 +3,7 @@ import { prisma } from './prisma'
 
 export async function getCurrentUser() {
   try {
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const userId = cookieStore.get('user-id')?.value
 
     if (!userId) {
