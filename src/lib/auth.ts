@@ -30,14 +30,17 @@ export async function findUserByEmail(email: string) {
 export async function validateUser(email: string, password: string) {
   const user = await findUserByEmail(email)
   
-  if (!user || !user.password) {
+  // Supabase Auth를 사용하는 경우 password는 null일 수 있음
+  if (!user) {
     return null
   }
   
-  const isValid = await verifyPassword(password, user.password)
-  
-  if (!isValid) {
-    return null
+  // password가 있는 경우에만 검증 (기존 Prisma 방식)
+  if (user.password) {
+    const isValid = await verifyPassword(password, user.password)
+    if (!isValid) {
+      return null
+    }
   }
   
   return user

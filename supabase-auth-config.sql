@@ -1,14 +1,7 @@
--- Supabase Auth 설정 업데이트
+-- Supabase Auth 사용자 상태 확인
 -- 이 SQL을 Supabase SQL Editor에서 실행하세요
 
--- 1. 현재 Auth 설정 확인
-SELECT 
-  key,
-  value
-FROM auth.config
-WHERE key IN ('SITE_URL', 'REDIRECT_URLS', 'ENABLE_EMAIL_CONFIRMATIONS');
-
--- 2. 이메일 확인이 필요한 사용자들 확인
+-- 1. 이메일 확인이 필요한 사용자들 확인
 SELECT 
   id,
   email,
@@ -19,7 +12,7 @@ FROM auth.users
 WHERE email_confirmed_at IS NULL
 ORDER BY created_at DESC;
 
--- 3. 최근 가입한 사용자들의 상태 확인
+-- 2. 최근 가입한 사용자들의 상태 확인
 SELECT 
   id,
   email,
@@ -34,3 +27,15 @@ SELECT
 FROM auth.users
 ORDER BY created_at DESC
 LIMIT 10;
+
+-- 3. 모든 사용자 목록 (최근 20명)
+SELECT 
+  id,
+  email,
+  email_confirmed_at,
+  created_at,
+  last_sign_in_at,
+  raw_user_meta_data
+FROM auth.users
+ORDER BY created_at DESC
+LIMIT 20;
