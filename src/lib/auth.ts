@@ -30,7 +30,7 @@ export async function findUserByEmail(email: string) {
 export async function validateUser(email: string, password: string) {
   const user = await findUserByEmail(email)
   
-  if (!user) {
+  if (!user || !user.password) {
     return null
   }
   
