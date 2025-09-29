@@ -43,7 +43,7 @@ export function MemoList({ memos, onRefresh }: MemoListProps) {
     setIsLoading(true)
     
     try {
-      const url = editingMemo ? `/api/memos/${editingMemo.id}` : '/api/memos'
+      const url = editingMemo ? `/api/supabase-memos/${editingMemo.id}` : '/api/supabase-memos'
       const method = editingMemo ? 'PUT' : 'POST'
       
       const response = await fetch(url, {
@@ -74,7 +74,7 @@ export function MemoList({ memos, onRefresh }: MemoListProps) {
     }
 
     try {
-      const response = await fetch(`/api/memos/${id}`, {
+      const response = await fetch(`/api/supabase-memos/${id}`, {
         method: 'DELETE',
       })
 

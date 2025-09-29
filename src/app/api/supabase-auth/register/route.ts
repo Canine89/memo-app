@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         message: '회원가입이 완료되었습니다.',
+        needsEmailConfirmation: !data.user?.email_confirmed_at,
         user: {
           id: data.user?.id,
           email: data.user?.email,

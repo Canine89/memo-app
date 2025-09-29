@@ -29,7 +29,7 @@ export function MemoApp({ user }: MemoAppProps) {
 
   const fetchMemos = async () => {
     try {
-      const response = await fetch('/api/memos')
+      const response = await fetch('/api/supabase-memos')
       if (response.ok) {
         const data = await response.json()
         setMemos(data)
@@ -47,7 +47,7 @@ export function MemoApp({ user }: MemoAppProps) {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
+      await fetch('/api/supabase-auth/logout', { method: 'POST' })
       window.location.href = '/auth'
     } catch (error) {
       console.error('로그아웃 오류:', error)

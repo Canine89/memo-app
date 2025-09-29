@@ -26,7 +26,7 @@ export function AuthForm({ mode, onSuccess }: AuthFormProps) {
     setError('')
 
     try {
-      const url = mode === 'login' ? '/api/auth/login' : '/api/auth/register'
+      const url = mode === 'login' ? '/api/supabase-auth/login' : '/api/supabase-auth/register'
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -39,6 +39,12 @@ export function AuthForm({ mode, onSuccess }: AuthFormProps) {
 
       if (!response.ok) {
         throw new Error(data.error || '오류가 발생했습니다.')
+      }
+
+      // 회원가입 시 이메일 확인이 필요한 경우 처리
+      if (mode === 'register' && data.needsEmailConfirmation) {
+        setError('이메일 확인이 필요합니다. 이메일을 확인해주세요.')
+        return
       }
 
       onSuccess()
